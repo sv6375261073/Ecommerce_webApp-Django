@@ -1,0 +1,106 @@
+{%extends 'basic.html'%}
+{% block title %}Index it is {% endblock %}
+{% block css %}
+
+  .snc{
+  height:300px;
+  margin-top:0px;
+}
+.glyphicon-chevron-left{
+  top:auto;
+  bottom:auto;
+  background-color:blue;
+height:1px;
+width:1px;
+}
+.glyphicon-chevron-right{
+  top:auto;
+  margin-bottom:0px;
+
+  background-color:blue;
+size:5px;
+}
+.container{
+background-color:blue;
+}
+
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+  {% for std,range,nslides in allstd %}
+  <h3 style="margin-top:0px;">{{std.0.Name}}</h3>
+  <div id="myCarousel{{forloop.counter}}" class="carousel slide" data-ride="carousel" >
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+      <li data-target="#myCarousel{{forloop.counter}}" data-slide-to="0" class="active"></li>
+      {% for i in std %}
+      <li data-target="#myCarousel{{forloop.counter}}" data-slide-to={{i}}></li>
+      {% endfor %}
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner">
+
+           <div class="item active" style="background-color:blue;">
+             {% for i in std|slice:"1:"%}
+             <div class="card col-md-4 col-sm-4 col-xs-4" style="width:400px;height:250px;background-color:lightblue;">
+              <img class="card-img-top img-responsive" src='/media/{{i.image}}' alt="Card image" style="border-radius:50%;width:175px;height:120px;">
+               <div class="card-body" style="background-color:blue;">
+               <h4 class="card-title">{{i.Name}}</h4>
+               <p class="card-text">{{i.desc }} {{i.DOB}}</p>
+                 <button class="btn btn-primary cart" id="cart" value='{{i.image}}'>Add to cart</button>
+               </div>
+            </div>
+             {% if forloop.counter|divisibleby:3 and forloop.counter > 0 and not forloop.last %}
+           </div><div class="item">
+             {%endif%}
+             {% endfor %}
+           </div>
+
+    </div>
+
+    <!-- Left and right controls -->
+    <a class="left carousel-control" href="#myCarousel{{forloop.counter}}" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left" style="heigh:0px;width:0px;"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel{{forloop.counter}}" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right" style="heigh:0px;width:0px;"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+
+<script>
+ console.log("working");
+ if(localStorage.getItem('cart')==null)
+ {
+  var cat={};
+ }
+ else
+ {
+ cart=JSON.parse(localStorage.getItem('cart'));
+ }
+ $('.cart').click(function(){
+ var idstr=this.id.toString();
+ console.log(idstr);
+ if(cart[idstr]!=undefined){
+ cart[idstr]=cart[idstr]+1;
+ }
+ else
+ {
+ cart[idstr]=1;
+ }
+ console.log(cart);
+ });
+
+ $('.cart').click(function(){
+ document.write("added in cart ");
+ });
+
+</script>
+
+{% endblock %}
